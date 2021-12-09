@@ -1,0 +1,33 @@
+- web based scraper
+- user scraper
+	- Username
+	- Nickname
+	- BIO
+	- website
+	- email
+	- profile picture
+- filter
+	- number followers
+	- number followings
+	- number posts
+	- bio whitelist
+	- bio blacklist
+	- location
+	- language
+
+
+
+
+
+
+
+
+
+https://www.tiktok.com/api/discover/user/?aid=1988&app_name=tiktok_web&device_platform=web&user_agent=Mozilla/5.0%20(Windows%20NT%2010.0;%20Win64;%20x64)%20AppleWebKit/537.36%20(KHTML,%20like%20Gecko)%20Chrome/85.0.4183.102%20Safari/537.36%20Edg/85.0.564.51&appId=1233&discoverType=28&needItemList=False&keyWord=fagenorn&offset=0&count=99&useRecommend=False&language=en
+
+
+FOLLOWING_URL = https://www.instagram.com/graphql/query/?query_hash=c56ee0ae1f89cdbd1c89e2bc6b8f3d18&variables={%22id%22:%224239994111%22,%22first%22:50,%22after%22:%22%22}
+FOLLOWING_URL = 'https://www.instagram.com/graphql/query/?query_hash=d04b0a864b4b54837c0d870b0e77e076&variables=%s'
+FOLLOWERS_URL = 'https://www.instagram.com/graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables=%s'
+
+

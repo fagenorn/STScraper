@@ -1,17 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-    </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RuntimeIdentifiers>win-x64;win-x86;linux-x64;osx-x64</RuntimeIdentifiers>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\STScraper.Api\STScraper.Api.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\STScraper.Api\STScraper.Api.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="CommandLineParser" Version="2.8.0" />
-      <PackageReference Include="CsvHelper" Version="15.0.5" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="CsvHelper" Version="15.0.5" />
+  </ItemGroup>
 
 </Project>

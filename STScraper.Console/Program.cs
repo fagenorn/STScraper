@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ using CommandLine;
 
 using STScraper.Api.Exceptions;
 using STScraper.Api.Models;
+using STScraper.Api.Models.Filters;
 using STScraper.Api.Models.Scrapers;
 using STScraper.Console.Exporters;
 
@@ -59,6 +61,21 @@ namespace STScraper.Console
                 yield break;
             }
 
+            var filterBuilder = new FilterBuilder()
+                                .SetFollowersFilter(options.MinFollowers, options.MaxFollowers)
+                                .SetFollowingsFilter(options.MinFollowings, options.MaxFollowings);
+
+            if ( options.BioWhitelist != null && options.BioWhitelist.Any() )
+            {
+                filterBuilder.SetBioWhitelistFilter(options.BioWhitelist.ToArray());
+            }
+
+            if ( options.BioBlacklist != null && options.BioBlacklist.Any() )
+            {
+                filterBuilder.SetBioBlacklistFilter(options.BioBlacklist.ToArray());
+            }
+
+            var filter          = filterBuilder.Build();
             var totalProgress   = users.Length;
             var currentProgress = 0.0;
             var usersCopy       = new Queue<string>(users);
@@ -72,11 +89,14 @@ namespace STScraper.Console
                     currentProgress++;
                     progress.Report(currentProgress / totalProgress);
 
-                    if ( done.IsCompletedSuccessfully && !string.IsNullOrWhiteSpace(done.Result.Username) )
+                    if ( done.IsCompletedSuccessfully && done.Result != null && !string.IsNullOrWhiteSpace(done.Result.Username) )
                     {
                         progress.Report($"Scraped {done.Result.Username}");
 
-                        yield return done.Result;
+                        if ( !filter.IsFiltered(done.Result) )
+                        {
+                            yield return done.Result;
+                        }
                     }
                     else if ( done.Exception?.InnerException is ThrottledException )
                     {
@@ -101,6 +121,24 @@ namespace STScraper.Console
 
             [Option('t', "threads", Required = false, HelpText = "The maximum number of threads to use.", Default = 50)]
             public int Threads { get; set; }
+
+            [Option("minFollowers", Required = false, HelpText = "The minimum number of followers.", Default = 0)]
+            public int MinFollowers { get; set; }
+
+            [Option("maxFollowers", Required = false, HelpText = "The maximum number of followers.", Default = 9999999)]
+            public int MaxFollowers { get; set; }
+
+            [Option("minFollowings", Required = false, HelpText = "The minimum number of followings.", Default = 0)]
+            public int MinFollowings { get; set; }
+
+            [Option("maxFollowings", Required = false, HelpText = "The maximum number of followings.", Default = 9999999)]
+            public int MaxFollowings { get; set; }
+
+            [Option("bioWhitelist", Required = false, HelpText = "The bio MUST contain one of the following phrases. (Not case sensitive)")]
+            public IEnumerable<string> BioWhitelist { get; set; }
+
+            [Option("bioBlacklist", Required = false, HelpText = "The bio MUST NOT contain one of the following phrases. (Not case sensitive)")]
+            public IEnumerable<string> BioBlacklist { get; set; }
         }
 
         [Verb("ig", HelpText = "Instagram User Scraper.")]
@@ -120,6 +158,18 @@ namespace STScraper.Console
             public int Delay { get; set; }
 
             public int Threads { get; set; }
+
+            public int MinFollowers { get; set; }
+
+            public int MaxFollowers { get; set; }
+
+            public int MinFollowings { get; set; }
+
+            public int MaxFollowings { get; set; }
+
+            public IEnumerable<string> BioWhitelist { get; set; }
+
+            public IEnumerable<string> BioBlacklist { get; set; }
         }
 
         [Verb("tiktok", HelpText = "TikTok User Scraper.")]
@@ -133,6 +183,18 @@ namespace STScraper.Console
             public int Delay { get; set; }
 
             public int Threads { get; set; }
+
+            public int MinFollowers { get; set; }
+
+            public int MaxFollowers { get; set; }
+
+            public int MinFollowings { get; set; }
+
+            public int MaxFollowings { get; set; }
+
+            public IEnumerable<string> BioWhitelist { get; set; }
+
+            public IEnumerable<string> BioBlacklist { get; set; }
         }
     }
 }
